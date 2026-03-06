@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package weather;
+
+option go_package = "weather-service/api/proto";
+
+import "google/protobuf/timestamp.proto";
+
+service WeatherService {
+    rpc AddCity(AddCityRequest) returns (AddCityResponse);
+    rpc GetCurrentWeather(GetWeatherRequest) returns (WeatherResponse);
+    rpc StreamHistory(StreamHistoryRequest) returns (stream WeatherResponse);
+    rpc ListCities(ListCitiesRequest) returns (ListCitiesResponse);
+    rpc DeleteCity(DeleteCityRequest) returns (DeleteCityResponse);
+}
+
+message AddCityRequest {
+    string name = 1;
+    string country = 2;
+}
+
+message AddCityResponse {
+    int64 id = 1;
+    string name = 2;
+    string country = 3;
+}
+
+message GetWeatherRequest {
+    string city = 1;
+    string country = 2;
+}
+
+message WeatherResponse {
+    int64 id = 1;
+    string city = 2;
+    double temperature = 3;
+    int32 humidity = 4;
+    string description = 5;
+    double wind_speed = 6;
+    google.protobuf.Timestamp observed_at = 7;
+}
+
+message StreamHistoryRequest {
+    string city = 1;
+    google.protobuf.Timestamp start_time = 2;
+    google.protobuf.Timestamp end_time = 3;
+    string country = 4;
+}
+
+message ListCitiesRequest {}
+
+message ListCitiesResponse {
+    repeated CityInfo cities = 1;
+}
+
+message CityInfo {
+    int64 id = 1;
+    string name = 2;
+    string country = 3;
+}
+
+message DeleteCityRequest {
+    string name = 1;
+    string country = 2;
+}
+
+message DeleteCityResponse {}
